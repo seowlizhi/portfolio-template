@@ -58,28 +58,6 @@ workEls.forEach((workEl) => {
   observer.observe(workEl);
 });
 
-// Toggle theme and store user preferred theme for future
-
-const switchThemeEl = document.querySelector('input[type="checkbox"]');
-const storedTheme = localStorage.getItem("theme");
-
-switchThemeEl.checked = storedTheme === "dark" || storedTheme === null;
-
-switchThemeEl.addEventListener("click", () => {
-  const isChecked = switchThemeEl.checked;
-
-  if (!isChecked) {
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-    localStorage.setItem("theme", "light");
-    switchThemeEl.checked = false;
-  } else {
-    document.body.classList.add("dark");
-    document.body.classList.remove("light");
-    localStorage.setItem("theme", "dark");
-  }
-});
-
 // Trap the tab when menu is opened
 
 const lastFocusedEl = document.querySelector('a[data-focused="last-focused"]');
@@ -112,3 +90,44 @@ logosWrappers.forEach(async (logoWrapper, i) => {
 });
 
 yearEl.textContent = new Date().getFullYear();
+
+
+
+const form = document.querySelector('.contact-form');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  sendMessage(form);
+})
+
+async function sendMessage(form) {
+  const formData = new FormData(form);
+
+  const data = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    telegram: formData.get('telegram-id'),
+    message: formData.get('message')
+  };
+
+  const url = '/.netlify/functions/telegram'; // Note the leading slash
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (response.ok) {
+      form.reset();
+      alert("Form Sent! We will get back to you on Telegram.");
+    } else {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert("Error sending form: " + error.message);
+  }
+}
