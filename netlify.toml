@@ -1,0 +1,8 @@
+[build]
+  publish = "."
+  functions = "functions"  
+  command = ""              
+
+[functions]
+  external_node_modules = ["axios"]
+  node_bundler = "esbuild"
