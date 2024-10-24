@@ -110,7 +110,7 @@ async function sendMessage(form) {
     message: formData.get('message')
   };
 
-  const url = '/functions/telegram'; // Note the leading slash
+  const url = '/.netlify/functions/telegram'; // Note the leading slash
   try {
     const response = await fetch(url, {
       method: "POST",
